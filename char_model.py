@@ -1,3 +1,5 @@
+# character level bidirectional language model
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -6,29 +8,55 @@ import numpy as np
 from torch.utils.data import TensorDataset
 from text import Xmls
 
-embed_size = 10
-lstm_units = 8
-epochs = 50
 np.random.seed(0)
 torch.manual_seed(0)
+
+embed_size = 30
+lstm_units = 20
+epochs = 30
 num_layers = 1
-num_directions = 2
+num_directions = 1
 batch_size = 1
 
+# xml = Xmls()
+# text = xml.get_xml_text(xml.xmls[0])
+# text = xml.preprocess_text(text)
+# vocab = list(set(text))
+# vocab_size = len(vocab)
+# vocab_dict = {letter: index for index, letter in enumerate(vocab)}
+# text = [vocab_dict[letter] for letter in text]
+# text = np.resize(text, [15, 318])
+# seq_len = text.shape[1]
+# # sentences = [text[i:i+318]]
+# text = torch.tensor(text)
+# test_dataset = TensorDataset(text, text)
+# train_loader = torch.utils.data.DataLoader(test_dataset, shuffle=True)
+# test_loader = torch.utils.data.DataLoader(test_dataset)
 
-xml = Xmls()
-text = xml.get_xml_text(xml.xmls[0])
-text = xml.preprocess_text(text)
-vocab = list(set(text))
-vocab_size = len(vocab)
-vocab_dict = {letter: index for index, letter in enumerate(vocab)}
-text = [vocab_dict[letter] for letter in text]
-text = np.resize(text, [15, 318])
-text = torch.tensor(text)
-test_dataset = TensorDataset(text, text)
-train_loader = torch.utils.data.DataLoader(test_dataset, shuffle=True)
-test_loader = torch.utils.data.DataLoader(test_dataset)
-seq_len = 318
+# simple hand-written data
+vocab_size = 10
+data = torch.tensor([
+    [0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4,
+     0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4,
+     0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4],
+    [0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4,
+     0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4,
+     0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4]
+])  # 20
+train_dataset = TensorDataset(data, data)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=1)
+test = torch.tensor([
+    [0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4,
+     0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4,
+     0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 9, 3, 4, 0, 1, 7, 3, 4],
+
+    [0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4,
+     0, 1, 2, 3, 4, 9, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4,
+     0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 8, 3, 4, 0, 1, 2, 3, 4]
+])
+test_dataset = TensorDataset(test, data)
+test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=1)
+seq_len = len(data[0])  # 20
 
 
 # in that model, each batch is a sentence. context is not saved between sentences.
@@ -45,18 +73,18 @@ class Model(nn.Module):
             hidden_size=lstm_units,
             num_layers=num_layers,
             batch_first=True,
-            bidirectional=True
+            bidirectional=False  # True
         )
         self.linear = nn.Linear(
             in_features=num_directions * lstm_units,
             out_features=vocab_size)
 
     def forward(self, input):
-        h_t = torch.zeros(num_layers * num_directions, batch_size, lstm_units, dtype=torch.double)
-        c_t = torch.zeros(num_layers * num_directions, batch_size, lstm_units, dtype=torch.double)
+        h_t1 = torch.zeros(num_layers * num_directions, batch_size, lstm_units, dtype=torch.double)
+        c_t1 = torch.zeros(num_layers * num_directions, batch_size, lstm_units, dtype=torch.double)
         embed = self.embed(input.long())
-        h_t, c_t = self.lstm(embed, (h_t, c_t))
-        output = self.linear(h_t)
+        h_t1, c_t1 = self.lstm(embed, (h_t1, c_t1))
+        output = self.linear(h_t1)
         output = torch.reshape(output, [batch_size, vocab_size, seq_len])
         return output
 
@@ -76,18 +104,16 @@ class Data:
 
 
 def run_model():
-
     model = Model()
     model.double()
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.8)  # LBFGS Adam
+    optimizer = optim.ASGD(model.parameters())  # LBFGS Adam RMSprop
 
     # train
     for epoch in range(epochs):
         print('STEP: ', epoch)
         for sentence_num, (x_curr, y_curr) in enumerate(train_loader):
-
             def closure():
                 optimizer.zero_grad()
                 out = model(x_curr)
@@ -107,6 +133,7 @@ def run_model():
             res = torch.argmax(soft_max, dim=1)
             print('sentence {} test loss:'.format(sentence_num), loss.item())
             # print('inp: {}\nout: {}'.format(x_curr.numpy(), res.numpy()))
+            print(x_curr.numpy()-res.numpy())
             # print([index
             #        for index, (first, second)
             #        in enumerate(zip(x_curr.numpy(), res.numpy()))
