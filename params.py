@@ -1,4 +1,4 @@
-vocab_size = 10
+# vocab_size = 10
 embed_size = 20
 hidden_size = 30
 num_directions = 2
