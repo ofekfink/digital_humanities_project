@@ -28,6 +28,8 @@ test_target = torch.from_numpy(np.array([[
 test_dataset = TensorDataset(test_input, test_target)
 test_loader = DataLoader(test_dataset)
 
+
+# file data
 # xml = Xmls()
 # text = xml.get_xml_text(xml.xmls[0])
 # text = xml.preprocess_text(text)
