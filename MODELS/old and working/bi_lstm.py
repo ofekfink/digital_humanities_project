@@ -1,27 +1,41 @@
-from data import vocab_size
-from params import *
+from hand_made_data import vocab_size
 import torch
 from torch import nn
-from params import hidden_size
-from data import train_loader, test_loader
+from hand_made_data import train_loader, test_loader
 import torch.optim as optim
 from numpy import count_nonzero
 
+
 class Model(nn.Module):
+
+    embed_size = 20
+    hidden_size = 30
+    num_directions = 2
+    num_layers = 2
+    batch_size = 1
 
     def __init__(self):
         super(Model, self).__init__()
-        self.embed = nn.Embedding(vocab_size, embed_size)
-        self.lstm = nn.LSTM(embed_size, hidden_size, batch_first=True, bidirectional=True, num_layers=num_layers)
-        self.linear = nn.Linear(num_directions * hidden_size, vocab_size)
+        self.embed = nn.Embedding(
+            num_embeddings=vocab_size,
+            embedding_dim=self.embed_size)
+        self.lstm = nn.LSTM(
+            input_size=self.embed_size,
+            hidden_size=self.hidden_size,
+            num_layers=self.num_layers,
+            batch_first=True,
+            bidirectional=True)
+        self.linear = nn.Linear(
+            in_features=self.num_directions * self.hidden_size,
+            out_features=vocab_size)
 
     def forward(self, input):
-        h = torch.zeros(num_layers * num_directions, batch_size, hidden_size, dtype=torch.double)
-        c = torch.zeros(num_layers * num_directions, batch_size, hidden_size, dtype=torch.double)
+        h = torch.zeros(self.num_layers * self.num_directions, self.batch_size, self.hidden_size, dtype=torch.double)
+        c = torch.zeros(self.num_layers * self.num_directions, self.batch_size, self.hidden_size, dtype=torch.double)
         embed = self.embed(input.long())
         h, c = self.lstm(embed, (h, c))
         output = self.linear(h)
-        output = output.permute(0, 2, 1)  # TODO - dataloaders need [[]] for iteration, but then this dimensions reverse
+        output = output.permute(0, 2, 1)
         return output
 
 
@@ -47,6 +61,8 @@ if __name__ == '__main__':
                 print('step ', i, ' loss:', curr_loss.item())
                 curr_loss.backward()
                 return curr_loss
+
+
             optimizer.step(closure)
 
         with torch.no_grad():
@@ -57,4 +73,4 @@ if __name__ == '__main__':
                 res = torch.argmax(soft_max, dim=1)
                 print('test loss:', loss.item())
                 # print('{}\n{}'.format(x.numpy(), res.numpy()))
-                print(count_nonzero(x.numpy()-res.numpy()))
+                print(count_nonzero(x.numpy() - res.numpy()))

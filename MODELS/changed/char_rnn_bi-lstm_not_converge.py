@@ -6,7 +6,6 @@ import torch.optim as optim
 from torch.nn import functional
 import numpy as np
 from torch.utils.data import TensorDataset
-from text import Xmls
 
 np.random.seed(0)
 torch.manual_seed(0)

@@ -169,7 +169,7 @@ class Xmls(Text):
 
 class Docxs(Text):
 
-    docxs = ["FILES/DOCX/" + f for f in os.listdir("FILES/DOCX/")]
+    docxs = ["FILES/DOCX/" + f for f in os.listdir("../../FILES/DOCX/")]
 
     @staticmethod
     def get_docx_text(docx_file):
