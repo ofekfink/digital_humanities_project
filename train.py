@@ -2,9 +2,11 @@ import torch
 from torch.optim import Adam
 from torch.nn import CrossEntropyLoss, functional
 from numpy import count_nonzero
-from data import Data
 from model import Model
 from configuration import epochs
+from data import TextFilesDS
+from torch.utils.data import DataLoader
+from dictionary import CharDictionary
 torch.manual_seed(0)
 
 
@@ -17,9 +19,11 @@ criterion = CrossEntropyLoss()
 optimizer = Adam(model.parameters(), lr=0.01)  # optim.LBFGS(model.parameters(), lr=0.8, history_size=50)
 
 # get data
-data = Data()
-train_loader = data.get_training_data()
-test_loader = data.get_testing_data()
+char_dict = CharDictionary()
+xml = TextFilesDS("FILES/HUGE_TEXTS/merged_xmls.txt", char_dict, seq_len=100)
+docx = TextFilesDS("FILES/HUGE_TEXTS/merged_docxs.txt", char_dict, seq_len=100)
+train_loader = DataLoader(xml)
+test_loader = DataLoader(docx)
 
 # train
 for i in range(epochs):

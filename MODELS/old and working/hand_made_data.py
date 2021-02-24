@@ -7,7 +7,6 @@ from text import Xmls
 class HandMadeData:
 
     vocab_size = 10
-    seq_len = 25
 
     @staticmethod
     def make_data_loaders():
@@ -23,7 +22,7 @@ class HandMadeData:
         target = torch.from_numpy(data[:, :-1])
         train_dataset = TensorDataset(inp, target)
         train_loader = DataLoader(train_dataset)
-        # target = torch.from_numpy(data[1:])
+        # target = torch.from_numpy(data[:,1:])
 
         test_input = torch.from_numpy(np.array([[
             0, 1, 2, 3, 4, 0, 1, 2, 3, 5,
