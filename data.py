@@ -6,7 +6,7 @@ class TextFilesDS(Dataset):
 
     def __init__(self, text_file, char_dict, seq_len):
         with open(text_file, 'r') as f:
-            self.text = f.read()[:1000]
+            self.text = f.read()[1000:2000]
         self.seq_len = seq_len
         self.len = len(self.text) // self.seq_len  # TODO change if overlapping sentences
         self.char_dict = char_dict
