@@ -13,11 +13,11 @@ class CharDictionary:
                 chars = chars.union(set(source_file.read()))
         chars = sorted(chars)
         self.char_dict = {char: index for index, char in enumerate(chars)}
-        # self.char_dict = {char: index+1 for index, char in enumerate(chars)}
+        # self.cdict = {char: index+1 for index, char in enumerate(chars)}
 
     def encode(self, sentence):
         encoded = [self.char_dict[char] for char in sentence]
-        # encoded = [self.char_dict[char] if char in self.char_dict else 0 for char in sentence]
+        # encoded = [self.cdict[char] if char in self.cdict else 0 for char in sentence]
         return torch.tensor(encoded, dtype=torch.long)
 
     def decode(self, tensor):
@@ -28,4 +28,4 @@ class CharDictionary:
         return len(self.char_dict)
 
 
-char_dict = CharDictionary()
+cdict = CharDictionary()

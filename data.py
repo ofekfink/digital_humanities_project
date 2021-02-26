@@ -1,7 +1,8 @@
 from torch.utils.data import Dataset
+from errors import ErrorsMaker
 
 
-class TextFilesDS(Dataset):
+class TextDS(Dataset):
 
     def __init__(self, text_file, char_dict, seq_len):
         with open(text_file, 'r') as f:
@@ -22,3 +23,20 @@ class TextFilesDS(Dataset):
         target = input
         return input, target
 
+
+class FaultedText(TextDS):
+    em = ErrorsMaker()
+
+    def __init__(self, text_file, char_dict, seq_len):
+        super(FaultedText, self).__init__(text_file, char_dict, seq_len)
+        self.faulted, self.labels = self.em.fault_text(self.text)
+
+    # returns the i sentence
+    def __getitem__(self, index):
+        start = index * self.seq_len
+        end = (index + 1) * self.seq_len
+        fault_seq = self.faulted[start:end]
+        labels = self.labels[start:end]
+        input = self.char_dict.encode(fault_seq)
+        target = self.char_dict.encode(labels)
+        return input, target

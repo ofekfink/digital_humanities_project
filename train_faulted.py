@@ -1,7 +1,7 @@
 import torch
 from model import Model
 from configuration import epochs
-from data import TextDS
+from data import FaultedText
 from torch.utils.data import DataLoader
 from configuration import criterion
 from torch.optim import Adam
@@ -18,7 +18,7 @@ model.double()
 optimizer = Adam(model.parameters(), lr=0.01)
 
 # get training data
-xml = TextDS("FILES/SMALL_TRAINING/xml_train.txt", cdict, seq_len=100)
+xml = FaultedText("FILES/SMALL_TRAINING/xml_train.txt", cdict, seq_len=100)
 train_loader = DataLoader(xml)
 
 # train
@@ -38,4 +38,4 @@ for i in range(epochs):
 
         optimizer.step(closure)
 
-torch.save(model, "TRAINED/xml_train.pt")
+torch.save(model, "TRAINED/xml_train_faulted.pt")

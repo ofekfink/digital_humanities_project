@@ -103,5 +103,5 @@ class Docxs(Text):
 # dir1 = "FILES/XML_TO_TEXT/"
 # t = Xmls()
 # tr, tst = t.split_files(dir1, num_files=10)
-# t.to_one_file(tr, "FILES/SMALL_TRAINING/xml_train.txt")
-# t.to_one_file(tst, "FILES/SMALL_TRAINING/xml_test.txt")
+# t.to_one_file(tr, "FILES/SMALL_TRAINING/xml_train_faulted.txt")
+# t.to_one_file(tst, "FILES/SMALL_TRAINING/xml_test_faulted.txt")

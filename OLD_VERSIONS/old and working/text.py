@@ -46,7 +46,7 @@ class Errors:
         try:
             similars = self.swaps[letter_to_swap]
         except KeyError:
-            print("word {} letter {} should have been swapped".format(word, letter_to_swap))
+            print("char_list {} letter {} should have been swapped".format(word, letter_to_swap))
             return word
         swap_to = choice(similars)
         lst = list(word)
@@ -86,7 +86,7 @@ class Text:
         # clean start & end whitespaces, remove empty lines and split to sentences
         sentences = [s.strip() for s in text.splitlines() if s and not s.isspace()]
 
-        # remove sentences of one word one letter (usually for subsections in laws)
+        # remove sentences of one char_list one letter (usually for subsections in laws)
         sentences = [s for s in sentences if s if not (len(s) == 1 and len(s[0]) == 1)]
 
         # clean one letter words

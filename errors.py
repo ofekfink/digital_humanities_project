@@ -1,11 +1,12 @@
-from random import randint, sample
-from dictionary import char_dict
+from random import randint, sample, choice
+from dictionary import cdict
 import numpy as np
 
 
 # a class to create intentional errors in correct xmls
 class ErrorsMaker:
-    swaps = dict.fromkeys(char_dict.keys(), [])  # char -> similar char list
+
+    swaps = dict.fromkeys(cdict.char_dict.keys(), [])  # char -> similar char list
     similar_letter = [
         ['מ', 'נ'],
         ['ם', 'מ'],
@@ -16,7 +17,7 @@ class ErrorsMaker:
         ['ג', 'נ'],
         ["'", 'י'],
         ['?', 'ל'],
-        ['!', 'ן'],
+        # ['!', 'ן'],
     ]
     error_rate = 0.2
 
@@ -25,7 +26,7 @@ class ErrorsMaker:
         self.errors_factory = {
             0: self.swap_adjacent_letters,
             1: self.swap_similar_letters,
-            2: self.remove_needed_space
+            # 2: self.remove_needed_space
         }
 
     # builds a table that stores all possible swaps per letter
@@ -34,50 +35,40 @@ class ErrorsMaker:
             self.swaps[pair[0]].append(pair[1])
             self.swaps[pair[1]].append(pair[0])
 
-    # =========================================
     def get_indices(self, text_len):
-        indexes = np.arange(text_len)
         amount = int(text_len * self.error_rate)
-        indices = sample(indexes, amount)
+        indices = sample(range(text_len), amount)
         return indices
 
-    def fault_text(self, text):
-        indices = self.get_indices(len(text))
-        new_text = ""
-        for i in indices:
-            if text[i] is ' ':
-                pass  # remove the space from text as an error,
-            else:
+    def dispatch_error(self, error_num):
+        return self.errors_factory[error_num]
 
-
-
-    # =========================================
-
-    # todo check if pass by val
-    def swap_similar_letters(self, word):
-        index = randint(0, len(word) - 1)
-        letter_to_swap = word[index]
+    def swap_similar_letters(self, char_list, index):
+        letter_to_swap = char_list[index]
         try:
             similars = self.swaps[letter_to_swap]
         except KeyError:
-            print("word {} letter {} should have been swapped".format(word, letter_to_swap))
-            return word
+            print("char_list {} letter {} should have been swapped".format(char_list, letter_to_swap))
+            return char_list
         swap_to = choice(similars)
-        lst = list(word)
-        lst[index] = swap_to
-        return ''.join(lst)
+        char_list[index] = swap_to
+        return char_list
 
     @staticmethod
-    def swap_adjacent_letters(word):
-        index = 0 if len(word) < 3 else randint(0, len(word) - 2)
-        lst = list(word)
-        lst[index], lst[index + 1] = lst[index + 1], lst[index]
-        return ''.join(lst)
+    def swap_adjacent_letters(char_list, index):
+        char_list[index], char_list[index + 1] = char_list[index + 1], char_list[index]  # TODO check
+        return char_list
 
-    # todo
-    @staticmethod
-    def remove_needed_space(word):
-        return word
+    def fault_text(self, text):
+        indices = self.get_indices(len(text))
+        labels = [char for char in text]
+        faulted = labels
+        for i in indices:
+            if text[i] is ' ' or '\n':
+                pass
+            else:
+                error_type = randint(0, 1)
+                error_func = self.dispatch_error(error_type)
+                faulted = error_func(faulted, i)
+        return faulted, labels
 
-    def dispatch_error(self, name):
-        return self.errors_factory[name]

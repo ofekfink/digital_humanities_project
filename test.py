@@ -1,22 +1,24 @@
 import torch
 from dictionary import CharDictionary
 from torch.utils.data import DataLoader
-from data import TextFilesDS
+from data import TextDS
 from torch.nn import functional
 from configuration import criterion
 from torch.optim import Adam
 from numpy import count_nonzero
-from dictionary import char_dict, CharDictionary
+from dictionary import cdict, CharDictionary
 
 
-xml = TextFilesDS("FILES/DOCX_TO_TEXT/146842.txt", char_dict, seq_len=100)
-test_loader = DataLoader(xml)
+docx = TextDS("FILES/DOCX_TO_TEXT/146842.txt", cdict, seq_len=100)
+test_loader = DataLoader(docx)
 
 model = torch.load("TRAINED/xml_train.pt")
 optimizer = Adam(model.parameters(), lr=0.01)
 
 # test
 with torch.no_grad():
+
+    diff_counter = 0
 
     for x, y in test_loader:
 
@@ -28,10 +30,12 @@ with torch.no_grad():
         # print('{}\n{}'.format(x.numpy(), res.numpy()))
         non_zero = count_nonzero(x.numpy() - res.numpy())
         print(non_zero)
-        if non_zero is not 0:
-            cd = CharDictionary()
-            original = cd.decode(x.squeeze())
-            predicted = cd.decode(res.squeeze())
-            print(original)
-            print(predicted)
+        # if non_zero is not 0:
+        #     cd = CharDictionary()
+        #     original = cd.decode(x.squeeze())
+        #     predicted = cd.decode(res.squeeze())
+        #     print(original)
+        #     print(predicted)
+        diff_counter = diff_counter + non_zero
 
+    print(diff_counter)
