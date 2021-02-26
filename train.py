@@ -6,11 +6,11 @@ from torch.utils.data import DataLoader
 from dictionary import CharDictionary
 from configuration import criterion
 from torch.optim import Adam
+from dictionary import char_dict
 torch.manual_seed(0)
 
 
 # create dictionary from training files
-char_dict = CharDictionary()
 vocab_size = char_dict.get_vocab_size()
 
 # get model

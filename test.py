@@ -6,10 +6,10 @@ from torch.nn import functional
 from configuration import criterion
 from torch.optim import Adam
 from numpy import count_nonzero
+from dictionary import char_dict, CharDictionary
 
 
-char_dict = CharDictionary()
-xml = TextFilesDS("FILES/SMALL_TRAINING/xml_test.txt", char_dict, seq_len=100)
+xml = TextFilesDS("FILES/DOCX_TO_TEXT/146842.txt", char_dict, seq_len=100)
 test_loader = DataLoader(xml)
 
 model = torch.load("TRAINED/xml_train.pt")
@@ -26,4 +26,12 @@ with torch.no_grad():
         res = torch.argmax(soft_max, dim=1)
         print('test loss:', loss.item())
         # print('{}\n{}'.format(x.numpy(), res.numpy()))
-        print(count_nonzero(x.numpy() - res.numpy()))
+        non_zero = count_nonzero(x.numpy() - res.numpy())
+        print(non_zero)
+        if non_zero is not 0:
+            cd = CharDictionary()
+            original = cd.decode(x.squeeze())
+            predicted = cd.decode(res.squeeze())
+            print(original)
+            print(predicted)
+

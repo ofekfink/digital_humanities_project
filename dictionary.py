@@ -3,7 +3,8 @@ import torch
 
 class CharDictionary:
 
-    source_files = ["FILES/SMALL_TRAINING/xml_train.txt", "FILES/SMALL_TRAINING/xml_test.txt"]
+    source_files = ["FILES/SMALL_TRAINING/xml_train.txt", "FILES/SMALL_TRAINING/xml_test.txt"] + \
+                   ["FILES/DOCX_TO_TEXT/146842.txt"]
 
     def __init__(self):
         chars = set()
@@ -25,3 +26,6 @@ class CharDictionary:
 
     def get_vocab_size(self):
         return len(self.char_dict)
+
+
+char_dict = CharDictionary()
