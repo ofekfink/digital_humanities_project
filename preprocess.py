@@ -8,6 +8,8 @@ from abc import ABC, abstractmethod
 
 class Text(ABC):
 
+    train_test_split = 0.8
+
     # removes double spaces and newlines
     @staticmethod
     def preprocess(text):
@@ -42,8 +44,7 @@ class Text(ABC):
 
     # converts all texts in dir to one big text file
     @staticmethod
-    def to_one_file(directory, output_path):
-        files = [directory + "/" + f for f in os.listdir(directory)]
+    def to_one_file(files, output_path):
         with open(output_path, 'w') as outfile:
             for file in files:
                 with open(file) as infile:
@@ -73,6 +74,14 @@ class Xmls(Text):
         new_file_name = "FILES/XML_TO_TEXT/" + "_".join(slashes[3:6]) + ".txt"
         return new_file_name
 
+    def split_files(self, directory, num_files):
+        files_list = [directory + f for f in os.listdir(directory)][:num_files]
+        length = len(files_list)
+        split = int(self.train_test_split * length)
+        train = files_list[:split]
+        test = files_list[split:]
+        return train, test
+
 
 # could not save 0 xmls
 class Docxs(Text):
@@ -89,3 +98,10 @@ class Docxs(Text):
         text = docx2txt.process(docx_file)
         text = self.preprocess(text)
         return text
+
+
+# dir1 = "FILES/XML_TO_TEXT/"
+# t = Xmls()
+# tr, tst = t.split_files(dir1, num_files=10)
+# t.to_one_file(tr, "FILES/SMALL_TRAINING/xml_train.txt")
+# t.to_one_file(tst, "FILES/SMALL_TRAINING/xml_test.txt")

@@ -9,11 +9,11 @@ from numpy import count_nonzero
 
 
 char_dict = CharDictionary()
-docx = TextFilesDS("FILES/HUGE_TEXTS/merged_docxs.txt", char_dict, seq_len=100)
-test_loader = DataLoader(docx)
+xml = TextFilesDS("FILES/SMALL_TRAINING/xml_test.txt", char_dict, seq_len=100)
+test_loader = DataLoader(xml)
 
-model = torch.load("trained_language_model.pt")
-optimizer = Adam(model.parameters(), lr=0.01)  # optim.LBFGS(model.parameters(), lr=0.8, history_size=50)
+model = torch.load("TRAINED/xml_train.pt")
+optimizer = Adam(model.parameters(), lr=0.01)
 
 # test
 with torch.no_grad():

@@ -9,15 +9,17 @@ from torch.optim import Adam
 torch.manual_seed(0)
 
 
-# get model
-model = Model()
-model.double()
-optimizer = Adam(model.parameters(), lr=0.01)  # optim.LBFGS(model.parameters(), lr=0.8, history_size=50)
+# create dictionary from training files
+char_dict = CharDictionary()
+vocab_size = char_dict.get_vocab_size()
 
+# get model
+model = Model(vocab_size)
+model.double()
+optimizer = Adam(model.parameters(), lr=0.01)
 
 # get training data
-char_dict = CharDictionary()
-xml = TextFilesDS("FILES/HUGE_TEXTS/merged_xmls.txt", char_dict, seq_len=100)
+xml = TextFilesDS("FILES/SMALL_TRAINING/xml_train.txt", char_dict, seq_len=100)
 train_loader = DataLoader(xml)
 
 # train
@@ -37,4 +39,4 @@ for i in range(epochs):
 
         optimizer.step(closure)
 
-torch.save(model, "trained_language_model.pt")
+torch.save(model, "TRAINED/xml_train.pt")

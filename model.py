@@ -5,7 +5,7 @@ from configuration import *
 
 class Model(nn.Module):
 
-    def __init__(self):
+    def __init__(self, vocab_size):
         super(Model, self).__init__()
         self.embed = nn.Embedding(
             num_embeddings=vocab_size,
