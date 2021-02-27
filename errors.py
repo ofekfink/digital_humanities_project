@@ -17,6 +17,8 @@ class ErrorsMaker:
         ['ג', 'נ'],
         ["'", 'י'],
         ['?', 'ל'],
+        ['ט', 'ם'],
+        ['ב', 'נ'],
         # ['!', 'ן'],
     ]
     error_rate = 0.2
@@ -37,7 +39,8 @@ class ErrorsMaker:
 
     def get_indices(self, text_len):
         amount = int(text_len * self.error_rate)
-        indices = sample(range(text_len), amount)
+        indices = sample(range(text_len-1), amount)
+        indices = sorted(indices)
         return indices
 
     def dispatch_error(self, error_num):
@@ -62,13 +65,16 @@ class ErrorsMaker:
     def fault_text(self, text):
         indices = self.get_indices(len(text))
         labels = [char for char in text]
-        faulted = labels
+        faulted = [char for char in text]
         for i in indices:
-            if text[i] is ' ' or '\n':
+            char = text[i]
+            if char == ' ' or char == '\n':
                 pass
             else:
                 error_type = randint(0, 1)
                 error_func = self.dispatch_error(error_type)
                 faulted = error_func(faulted, i)
+        faulted = "".join(faulted)
+        labels = "".join(labels)
         return faulted, labels
 

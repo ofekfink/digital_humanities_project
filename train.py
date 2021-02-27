@@ -9,33 +9,35 @@ from dictionary import cdict
 torch.manual_seed(0)
 
 
-# create dictionary from training files
-vocab_size = cdict.get_vocab_size()
+if __name__ == "__main__":
 
-# get model
-model = Model(vocab_size)
-model.double()
-optimizer = Adam(model.parameters(), lr=0.01)
+    # create dictionary from training files
+    vocab_size = cdict.get_vocab_size()
 
-# get training data
-xml = TextDS("FILES/SMALL_TRAINING/xml_train.txt", cdict, seq_len=100)
-train_loader = DataLoader(xml)
+    # get model
+    model = Model(vocab_size)
+    model.double()
+    optimizer = Adam(model.parameters(), lr=0.01)
 
-# train
-for i in range(epochs):
+    # get training data
+    xml = TextDS("FILES/SMALL_TRAINING/xml_train.txt", cdict, seq_len=100)
+    train_loader = DataLoader(xml)
 
-    print('STEP: ', i)
+    # train
+    for i in range(epochs):
 
-    for x, y in train_loader:
+        print('STEP: ', i)
 
-        def closure():
-            optimizer.zero_grad()
-            out = model(x)
-            curr_loss = criterion(out, y.long())
-            print('step ', i, ' loss:', curr_loss.item())
-            curr_loss.backward()
-            return curr_loss
+        for x, y in train_loader:
 
-        optimizer.step(closure)
+            def closure():
+                optimizer.zero_grad()
+                out = model(x)
+                curr_loss = criterion(out, y.long())
+                print('step ', i, ' loss:', curr_loss.item())
+                curr_loss.backward()
+                return curr_loss
 
-torch.save(model, "TRAINED/xml_train.pt")
+            optimizer.step(closure)
+
+    torch.save(model, "TRAINED/xml_train.pt")

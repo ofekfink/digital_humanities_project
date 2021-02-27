@@ -25,10 +25,10 @@ class TextDS(Dataset):
 
 
 class FaultedText(TextDS):
-    em = ErrorsMaker()
 
     def __init__(self, text_file, char_dict, seq_len):
         super(FaultedText, self).__init__(text_file, char_dict, seq_len)
+        self.em = ErrorsMaker()
         self.faulted, self.labels = self.em.fault_text(self.text)
 
     # returns the i sentence
