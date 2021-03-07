@@ -5,6 +5,7 @@ from errors import ErrorsMaker
 class TextDS(Dataset):
 
     def __init__(self, text_file, char_dict, seq_len):
+        self.file_name = text_file
         with open(text_file, 'r') as f:
             self.text = f.read()
         self.seq_len = seq_len
