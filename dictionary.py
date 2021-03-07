@@ -2,9 +2,11 @@ import torch
 
 
 class CharDictionary:
+
     source_files = [
         "FILES/SMALL_TRAINING/xml_train.txt",
         "FILES/SMALL_TRAINING/xml_test.txt",
+        "FILES/DOCX_TO_TEXT/146844.txt"
     ]
 
     def __init__(self):

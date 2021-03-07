@@ -1,6 +1,59 @@
-divide to 2 :
+We chose to implement character-level language modeling (number 4 in OCR project list).
 
-* train on true xmls without errors, see what happens on docx.
-* train on faulted xmls, see what happens on true / faulted xmls. see what happens on docxs.
+files & contents :
 
-# we are basically using transfer learning
+1. preprocess.py :
+contains 3 classes :
+Text - class to handle text preprocessing.
+Xmls, Docxs - classes that extend Text, to handle specific inputs.
+in this script we can create joint training and testing files
+(we can join 100 xmls together as one text file to train on etc).
+
+2. dictionary.py :
+contains a char dictionary class -
+gets the name of text source files from which collects all current characters
+(if we train on big enough corpus there should not be any letters missing)
+this class encodes/decodes char - number according to char index in vocabulary (of chars).
+if you want to cover the case of unseen char, you can use index 0 (added as commented line, but bad for NN).
+the script creates an instance of that class to be used in the project.
+
+3. data.py :
+contains 2 classes that extend pytorch Dataset class.
+basically they define texts as datasets in which each "observation" is a sequence of characters.
+there is also the faulted text DS class as infrastructure for future steps.
+important to notice that this is the place where we create the labels (here - the same letter).
+
+4. model.py :
+defines the model architecture we used and the model's forward pass.
+
+5. configuration.py :
+defines some of the model hyper-parameters
+
+6. train.py :
+script for training.
+gets instances of the model and the dictionary.
+gets the input file for training and converts it to a dataset.
+trains and saves the trained model to a file.
+
+7. test.py :
+script for testing on xmls and evaluating.
+gets the input file for testing and converts it to a dataset.
+loads trained model.
+predicts for testing  & choose a char by softmax.
+in comment if you want to see the differences.
+
+8. errors.py :
+our intended project is covered.
+but I came across an article called "" which describes how to add mistakes and train the model to identify them.
+we started expanding out project towards that direction as well, but it's a whole other project to continue.
+so as we mentioned we have the faulted text dataset, and also an errors class that can do intended faulting of text.
+you are welcome to continue it, use it and check the results.
+
+PROCESS FLOW:
+converted doc to docx
+converted docx/xmls to text files
+combined as many xmls as I want to one text file
+train on combined xmls
+test on combined xmls (to check accuracy)
+test on single docx
+future steps.

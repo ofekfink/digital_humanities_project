@@ -8,7 +8,7 @@ class TextDS(Dataset):
         with open(text_file, 'r') as f:
             self.text = f.read()
         self.seq_len = seq_len
-        self.len = len(self.text) // self.seq_len  # TODO change if overlapping sentences
+        self.len = len(self.text) // self.seq_len  # do not cover the end
         self.char_dict = char_dict
 
     def __len__(self):

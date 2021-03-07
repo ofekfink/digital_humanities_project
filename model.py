@@ -28,3 +28,4 @@ class Model(nn.Module):
         output = self.linear(h)
         output = output.permute(0, 2, 1)
         return output
+

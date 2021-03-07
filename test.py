@@ -1,23 +1,23 @@
 import torch
 from torch.utils.data import DataLoader
-from data import TextDS, FaultedText
+from data import TextDS
 from torch.nn import functional
 from configuration import criterion
 from torch.optim import Adam
 from numpy import count_nonzero
-from dictionary import cdict, CharDictionary
+from dictionary import cdict
 
 
 if __name__ == "__main__":
 
-    # test = TextDS("FILES/SMALL_TRAINING/xml_test.txt", cdict, seq_len=100)
-    test = TextDS("FILES/DOCX_TO_TEXT/146849.txt", cdict, seq_len=100)
-    test_loader = DataLoader(test)
+    # ===================== TEST XMLS =====================
+
+    xml_test = TextDS("FILES/SMALL_TRAINING/xml_test.txt", cdict, seq_len=100)
+    test_loader = DataLoader(xml_test)
 
     model = torch.load("TRAINED/xml_train.pt")
     optimizer = Adam(model.parameters(), lr=0.01)
 
-    # test
     with torch.no_grad():
 
         correct = 0
@@ -29,15 +29,33 @@ if __name__ == "__main__":
             soft_max = functional.softmax(pred, 1)
             res = torch.argmax(soft_max, dim=1)
             print('test loss:', loss.item())
-            # print('{}\n{}'.format(x.numpy(), res.numpy()))
             non_zero = count_nonzero(x.numpy() - res.numpy())
-            correct += len(x.numpy()[0]) - non_zero
+            seq_len = len(x.numpy()[0])
+            correct = correct + seq_len - non_zero
+
+    loader_len = len(test_loader)
+    accuracy = (100 * correct) / (loader_len * 100)  # 100 for percentage, and 100 for sequence length
+    print("xmls testing")
+    print(accuracy)
+
+    # ===================== TEST DOCX =====================
+
+    docx_test = TextDS("FILES/DOCX_TO_TEXT/146844.txt", cdict, seq_len=100)
+    docx_test_loader = DataLoader(docx_test)
+
+    with torch.no_grad():
+
+        for x, y in docx_test_loader:
+
+            pred = model(x)
+            loss = criterion(pred, y.long()).squeeze()
+            soft_max = functional.softmax(pred, 1)
+            res = torch.argmax(soft_max, dim=1)
+            print('test loss:', loss.item())
+            non_zero = count_nonzero(x.numpy() - res.numpy())
             # if non_zero is not 0:
-            #     cd = CharDictionary()
-            #     original = cd.decode(x.squeeze())
-            #     predicted = cd.decode(res.squeeze())
+            #     original = cdict.decode(x.squeeze())
+            #     predicted = cdict.decode(res.squeeze())
             #     print(original)
             #     print(predicted)
 
-    accuracy = 100 * correct / len(test_loader) * 100
-    print(accuracy)

@@ -19,7 +19,7 @@ class Text(ABC):
         text = re.sub("\n+", '\n', text)
         return text
 
-    # converts all files in list to text after preprocess
+    # converts each file in list to text file after preprocess
     def to_text_files(self, files):
         count = 0
         for file in files:
@@ -74,6 +74,7 @@ class Xmls(Text):
         new_file_name = "FILES/XML_TO_TEXT/" + "_".join(slashes[3:6]) + ".txt"
         return new_file_name
 
+    # splits num_files from dir to train and test sets
     def split_files(self, directory, num_files):
         files_list = [directory + f for f in os.listdir(directory)][:num_files]
         length = len(files_list)
