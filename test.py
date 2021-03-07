@@ -6,9 +6,11 @@ from configuration import criterion
 from torch.optim import Adam
 from numpy import count_nonzero
 from dictionary import cdict
-
+from tagger import Tagger
 
 if __name__ == "__main__":
+
+    tagger = Tagger()
 
     # ===================== TEST XMLS =====================
 
@@ -21,6 +23,7 @@ if __name__ == "__main__":
     with torch.no_grad():
 
         correct = 0
+        seq_num = 0
 
         for x, y in test_loader:
 
@@ -36,7 +39,7 @@ if __name__ == "__main__":
     loader_len = len(test_loader)
     accuracy = (100 * correct) / (loader_len * 100)  # 100 for percentage, and 100 for sequence length
     print("xmls testing")
-    print(accuracy)
+    print("\nAccuracy: " + str(accuracy))
 
     # ===================== TEST DOCX =====================
 
@@ -44,6 +47,8 @@ if __name__ == "__main__":
     docx_test_loader = DataLoader(docx_test)
 
     with torch.no_grad():
+
+        seq_num = 0
 
         for x, y in docx_test_loader:
 
@@ -53,9 +58,9 @@ if __name__ == "__main__":
             res = torch.argmax(soft_max, dim=1)
             print('test loss:', loss.item())
             non_zero = count_nonzero(x.numpy() - res.numpy())
-            # if non_zero is not 0:
-            #     original = cdict.decode(x.squeeze())
-            #     predicted = cdict.decode(res.squeeze())
-            #     print(original)
-            #     print(predicted)
-
+            if non_zero is not 0:
+                original = cdict.decode(x.squeeze())
+                predicted = cdict.decode(res.squeeze())
+                tagger.add_error(docx_test.file_name, seq_num, original, predicted)
+            seq_num += 1
+        tagger.print_tree_to_file()

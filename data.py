@@ -10,6 +10,7 @@ class TextDS(Dataset):
         self.seq_len = seq_len
         self.len = len(self.text) // self.seq_len  # do not cover the end
         self.char_dict = char_dict
+        self.file_name = text_file
 
     def __len__(self):
         return self.len
@@ -30,6 +31,7 @@ class FaultedText(TextDS):
         super(FaultedText, self).__init__(text_file, char_dict, seq_len)
         self.em = ErrorsMaker()
         self.faulted, self.labels = self.em.fault_text(self.text)
+        self.file_name = text_file
 
     # returns the i sentence
     def __getitem__(self, index):
