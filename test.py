@@ -63,4 +63,5 @@ if __name__ == "__main__":
                 predicted = cdict.decode(res.squeeze())
                 tagger.add_error(docx_test.file_name, seq_num, original, predicted)
             seq_num += 1
+
         tagger.print_tree_to_file()

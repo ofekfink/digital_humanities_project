@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<errors>
+  <error file_name="FILES/DOCX_TO_TEXT/146844.txt" line="1">
+    <original>הצעת החוק ודברי הסבר פורסמו בה"ח 1090, תשל"ד,
+עמ' 32.
+1. שר האוצר מורשה ללוות, בשם מדיבת ישראל, סכום</original>
+    <predicted>הצעת החוק ודברי הסבר פורסמו בה"ח 1090, תשל"ד,
+עמ, 32.
+1. שר האוצר מורשה ללוות, בשם מדיבת ישראל, סכום</predicted>
+    <differences>
+      <difference>in word 7, was "תשל"ד,
+עמ'", and predicted "תשל"ד,
+עמ,"</difference>
+    </differences>
+  </error>
+  <error file_name="FILES/DOCX_TO_TEXT/146844.txt" line="5">
+    <original>השיקום) (State of Israel Bonds )Development and Reconstruction
+או בשינוי שם זה ובסימוני סדרות, כפי ש</original>
+    <predicted>השיקום) (State of Israec oonos ):e־eco3ment and פeconstruction
+או בשינוי שם זה ובסימוני סדרות, כפי ש</predicted>
+    <differences>
+      <difference>in word 3, was "Israel", and predicted "Israec"</difference>
+      <difference>in word 4, was "Bonds", and predicted "oonos"</difference>
+      <difference>in word 5, was ")Development", and predicted "):e־eco3ment"</difference>
+      <difference>in word 7, was "Reconstruction
+או", and predicted "פeconstruction
+או"</difference>
+    </differences>
+  </error>
+  <error file_name="FILES/DOCX_TO_TEXT/146844.txt" line="34">
+    <original>ישראלי על פי בקשתו של מחזיק האיגרת.
+פטור ממסים
+9. (א) איגרות החוב פטורות ממס בולים*
+(ב) איגרת חוב שה</original>
+    <predicted>ישראלי על פי בקשתו של מחזיק האיגרת.
+פטור ממסים
+9. (א) איגרות החוב פטורות ממס בולים-
+(ב) איגרת חוב שה</predicted>
+    <differences>
+      <difference>in word 13, was "בולים*
+(ב)", and predicted "בולים-
+(ב)"</difference>
+    </differences>
+  </error>
+  <error file_name="FILES/DOCX_TO_TEXT/146844.txt" line="42">
+    <original>בחוץ לארץ על מנת לעסוק בשמו במכירת איגרות החוב
+ובשאר שירותים הכרוכים בהן?
+(3) למנות רשמים וסוכני העב</original>
+    <predicted>בחוץ לארץ על מנת לעסוק בשמו במכירת איגרות החוב
+ובשאר שירותים הכרוכים בהןL
+(3) למנות רשמים וסוכני העב</predicted>
+    <differences>
+      <difference>in word 11, was "בהן?
+(3)", and predicted "בהןL
+(3)"</difference>
+    </differences>
+  </error>
+</errors>

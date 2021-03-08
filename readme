@@ -44,7 +44,8 @@ in comment if you want to see the differences.
 
 8. errors.py :
 our intended project is covered.
-but I came across an article called "" which describes how to add mistakes and train the model to identify them.
+but I came across an article called "Generating a Training Corpus for OCR Post-Correction Using
+Encoder-Decoder Model" which describes how to add mistakes and train the model to identify them.
 we started expanding out project towards that direction as well, but it's a whole other project to continue.
 so as we mentioned we have the faulted text dataset, and also an errors class that can do intended faulting of text.
 you are welcome to continue it, use it and check the results.
