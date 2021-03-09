@@ -7,10 +7,12 @@ from torch.optim import Adam
 from numpy import count_nonzero
 from dictionary import cdict
 from tagger import Tagger
+from printer import Printer
 
 if __name__ == "__main__":
 
     tagger = Tagger()
+    printer = Printer()
 
     # ===================== TEST XMLS =====================
 
@@ -58,10 +60,14 @@ if __name__ == "__main__":
             res = torch.argmax(soft_max, dim=1)
             print('test loss:', loss.item())
             non_zero = count_nonzero(x.numpy() - res.numpy())
+            original = cdict.decode(x.squeeze())
             if non_zero is not 0:
-                original = cdict.decode(x.squeeze())
                 predicted = cdict.decode(res.squeeze())
                 tagger.add_error(docx_test.file_name, seq_num, original, predicted)
+                printer.add_line(original, predicted)
+            else: 
+                printer.add_line(original, -1)
             seq_num += 1
 
         tagger.print_tree_to_file()
+        printer.print_to_file()
