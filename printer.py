@@ -20,6 +20,6 @@ class Printer:
             self.to_print += new_error_line(line, predicted) + '\n'
 
     def print_to_file(self):
-        with open(self.file_name, "w+", encoding='UTF-8') as f:
-            f.write(self.to_print)
+        with open(self.file_name, "wb", encoding='UTF-8') as f:
+            f.write(self.to_print.encode('utf-8'))
             f.close()
