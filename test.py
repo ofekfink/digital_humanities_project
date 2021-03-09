@@ -11,7 +11,7 @@ from printer import Printer
 
 if __name__ == "__main__":
 
-    tagger = Tagger()
+    # tagger = Tagger()
     printer = Printer()
 
     # ===================== TEST XMLS =====================
@@ -63,11 +63,11 @@ if __name__ == "__main__":
             original = cdict.decode(x.squeeze())
             if non_zero is not 0:
                 predicted = cdict.decode(res.squeeze())
-                tagger.add_error(docx_test.file_name, seq_num, original, predicted)
+                # tagger.add_error(docx_test.file_name, seq_num, original, predicted)
                 printer.add_line(original, predicted)
             else: 
                 printer.add_line(original, -1)
             seq_num += 1
 
-        tagger.print_tree_to_file()
+        # tagger.print_tree_to_file()
         printer.print_to_file()
