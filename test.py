@@ -17,7 +17,7 @@ if __name__ == "__main__":
     optimizer = Adam(model.parameters(), lr=0.01)
 
     # ===================== TEST XMLS =====================
-    '''
+
     xml_test = TextDS("FILES/SMALL_TRAINING/xml_test.txt", cdict, seq_len=100)
     test_loader = DataLoader(xml_test)
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     accuracy = (100 * correct) / (loader_len * 100)  # 100 for percentage, and 100 for sequence length
     print("xmls testing")
     print("\nAccuracy: " + str(accuracy))
-    '''
+
     # ===================== TEST DOCX =====================
 
     docx_test = TextDS("FILES/DOCX_TO_TEXT/146844.txt", cdict, seq_len=100)
