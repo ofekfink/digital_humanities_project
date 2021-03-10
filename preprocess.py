@@ -7,7 +7,6 @@ from abc import ABC, abstractmethod
 
 
 class Text(ABC):
-
     train_test_split = 0.8
 
     # removes double spaces and newlines
@@ -26,7 +25,7 @@ class Text(ABC):
             new_file = self.new_file_name(file)
             text = self.get_text(file)
             try:
-                text_file = open(new_file, "w+")
+                text_file = open(new_file, "w+", encoding="utf8")
                 text_file.write(text)
             except (UnicodeEncodeError, FileNotFoundError):
                 count = count + 1
@@ -45,9 +44,9 @@ class Text(ABC):
     # converts all texts in dir to one big text file
     @staticmethod
     def to_one_file(files, output_path):
-        with open(output_path, 'w') as outfile:
+        with open(output_path, 'w', encoding="utf8") as outfile:
             for file in files:
-                with open(file) as infile:
+                with open(file, encoding="utf8") as infile:
                     for line in infile:
                         outfile.write(line)
 
@@ -101,8 +100,15 @@ class Docxs(Text):
         return text
 
 
+# # convert to many text files
+# xml = Xmls()
+# xml.to_text_files(xml.xmls)
+# docx = Docxs()
+# docx.to_text_files(docx.docxs)
+
+# combine to one file
 dir1 = "FILES/XML_TO_TEXT/"
 t = Xmls()
-tr, tst = t.split_files(dir1, num_files=100)
+tr, tst = t.split_files(dir1, num_files=10)
 t.to_one_file(tr, "FILES/SMALL_TRAINING/xml_train.txt")
 t.to_one_file(tst, "FILES/SMALL_TRAINING/xml_test.txt")

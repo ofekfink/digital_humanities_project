@@ -13,14 +13,13 @@ if __name__ == "__main__":
 
     # tagger = Tagger()
     printer = Printer()
-
-    # ===================== TEST XMLS =====================
-
-    xml_test = TextDS("FILES/SMALL_TRAINING/xml_test.txt", cdict, seq_len=100)
-    test_loader = DataLoader(xml_test)
-
     model = torch.load("TRAINED/xml_train.pt")
     optimizer = Adam(model.parameters(), lr=0.01)
+
+    # ===================== TEST XMLS =====================
+    '''
+    xml_test = TextDS("FILES/SMALL_TRAINING/xml_test.txt", cdict, seq_len=100)
+    test_loader = DataLoader(xml_test)
 
     with torch.no_grad():
 
@@ -42,7 +41,7 @@ if __name__ == "__main__":
     accuracy = (100 * correct) / (loader_len * 100)  # 100 for percentage, and 100 for sequence length
     print("xmls testing")
     print("\nAccuracy: " + str(accuracy))
-
+    '''
     # ===================== TEST DOCX =====================
 
     docx_test = TextDS("FILES/DOCX_TO_TEXT/146844.txt", cdict, seq_len=100)
@@ -61,8 +60,8 @@ if __name__ == "__main__":
             print('test loss:', loss.item())
             non_zero = count_nonzero(x.numpy() - res.numpy())
             original = cdict.decode(x.squeeze())
+            predicted = cdict.decode(res.squeeze())
             if non_zero is not 0:
-                predicted = cdict.decode(res.squeeze())
                 # tagger.add_error(docx_test.file_name, seq_num, original, predicted)
                 printer.add_line(original, predicted)
             else: 

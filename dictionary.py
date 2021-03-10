@@ -12,7 +12,7 @@ class CharDictionary:
     def __init__(self):
         chars = set()
         for file in self.source_files:
-            with open(file, 'r') as source_file:
+            with open(file, 'r', encoding="utf8") as source_file:
                 chars = chars.union(set(source_file.read()))
         chars = sorted(chars)
         self.char_dict = {char: index for index, char in enumerate(chars)}
@@ -25,7 +25,8 @@ class CharDictionary:
 
     def decode(self, tensor):
         index_to_char = {index: char for char, index in self.char_dict.items()}
-        return "".join([index_to_char[int(t)] for t in tensor])
+        decoded = "".join([index_to_char[int(t)] for t in tensor])
+        return decoded
 
     def get_vocab_size(self):
         return len(self.char_dict)
